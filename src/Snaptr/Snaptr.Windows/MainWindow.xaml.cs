@@ -23,16 +23,24 @@ namespace Snaptr.Windows
     public partial class MainWindow : Window
     {
         Snapper _snapper;
-
+        RecordArea _recordArea;
         public MainWindow()
         {
             InitializeComponent();
-            _snapper = new Snapper(this);
+            
+            this.Loaded += MainWindow_Loaded;
            
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _recordArea = new RecordArea();
+            _recordArea.Show();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            _snapper = new Snapper(_recordArea);
             _snapper.DoSnapz();            
         }
 

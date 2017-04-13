@@ -36,7 +36,7 @@ namespace Snaptr.Windows
             {
                 f.Delete();
             }
-            timer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
+            timer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(200));
         }
 
         public void Stop()
@@ -58,11 +58,15 @@ namespace Snaptr.Windows
             
         }
 
-        public BitmapSource CopyScreen(Window window)
+        public BitmapSource CopyScreen(Window window, bool fs = false)
         {
-            var size = _getNativePrimaryScreenSize(window);
+            var size = fs ? _getNativePrimaryScreenSize(window) : _getNativeWindowSize(window);
 
-            size = new System.Drawing.Size(1000, 1000);
+            var (x, y) = _getWindowPos(window);
+
+            var offsetX = fs ? 0 : x;
+            var offsetY = fs ? 0 : y;
+            //size = new System.Drawing.Size(1000, 1000);
 
             using (var screenBmp = new Bitmap(
                 size.Width,
@@ -71,7 +75,7 @@ namespace Snaptr.Windows
             {
                 using (var bmpGraphics = Graphics.FromImage(screenBmp))
                 {
-                    bmpGraphics.CopyFromScreen(200, 200, 0, 0, screenBmp.Size);
+                    bmpGraphics.CopyFromScreen(offsetX, offsetY, 0, 0, screenBmp.Size);
                     return Imaging.CreateBitmapSourceFromHBitmap(
                         screenBmp.GetHbitmap(),
                         IntPtr.Zero,
@@ -81,12 +85,35 @@ namespace Snaptr.Windows
             }
         }
 
-        private System.Drawing.Size _getNativePrimaryScreenSize(Window window)
+        (int x, int y) _getWindowPos(Window window)
+        {
+            var (dpiHeightFactor, dpiWidthFactor) = _getFactors(window);
+            return ((int)(window.Left * dpiWidthFactor),
+                (int)(window.Top * dpiHeightFactor));
+        }
+
+        (double dpiHeight, double dpiWidth) _getFactors(Window window)
         {
             PresentationSource mainWindowPresentationSource = PresentationSource.FromVisual(window);
             Matrix m = mainWindowPresentationSource.CompositionTarget.TransformToDevice;
             var dpiWidthFactor = m.M11;
             var dpiHeightFactor = m.M22;
+
+            return (dpiHeightFactor, dpiWidthFactor);
+        }
+
+        private System.Drawing.Size _getNativeWindowSize(Window window)
+        {
+            var (dpiHeightFactor, dpiWidthFactor) = _getFactors(window);
+
+            return new System.Drawing.Size(
+                (int)(window.ActualWidth * dpiWidthFactor), 
+                (int)(window.ActualHeight * dpiWidthFactor));
+        }
+
+        private System.Drawing.Size _getNativePrimaryScreenSize(Window window)
+        {
+            var (dpiHeightFactor, dpiWidthFactor) = _getFactors(window);
             double screenHeight = SystemParameters.PrimaryScreenHeight * dpiHeightFactor;
             double screenWidth = SystemParameters.PrimaryScreenWidth * dpiWidthFactor;
 

@@ -23,7 +23,7 @@ namespace Snaptr.Windows
             _runFf(param, rootFolder);
 
             _runFf(
-                "-y -i \"output.mp4\" -vf fps=10,scale=320:-1:flags=lanczos,palettegen palette.png",
+                "-y -i \"output.mp4\" -vf fps=5,scale=320:-1:flags=lanczos,palettegen palette.png",
                 rootFolder);
 
             _runFf(
