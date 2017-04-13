@@ -22,24 +22,28 @@ namespace Snaptr.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
+        Snapper _snapper;
+
         public MainWindow()
         {
             InitializeComponent();
-
+            _snapper = new Snapper(this);
            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var sn = new Snapper();
-
-            
-            sn.DoSnapz(this);
-            
+            _snapper.DoSnapz();            
         }
 
         private void Build_Click(object sender, RoutedEventArgs e)
         {
+           
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            _snapper.Stop();
             var vp = new VideoProd();
             vp.Produce();
         }

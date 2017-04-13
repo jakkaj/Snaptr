@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -15,20 +16,46 @@ namespace Snaptr.Windows
 {
     public class Snapper
     {
-        public async Task DoSnapz(Window window)
-        {
-            int count = 0;
+        Timer timer = null;
 
-            while (true)
+        Window _window;
+
+        int count = 0;
+
+        public Snapper(Window window)
+        {
+            _window = window;
+            timer = new Timer(_snap);
+        }
+        public void DoSnapz()
+        {
+            var rootFolder = @"C:\Users\jorkni\Documents\temp\snapz";
+            var dir = new DirectoryInfo(rootFolder);
+
+            foreach (var f in dir.GetFiles())
             {
-                var result = CopyScreen(window);
+                f.Delete();
+            }
+            timer.Change(TimeSpan.Zero, TimeSpan.FromMilliseconds(100));
+        }
+
+        public void Stop()
+        {
+            timer.Change(Int32.MaxValue, Int32.MaxValue);
+        }
+
+        void _snap(object state)
+        {
+            _window.Dispatcher.Invoke(() =>
+            {
+                var result = CopyScreen(_window);
 
                 var jpg = result.ToJpegData();
 
-                File.WriteAllBytes($@"C:\Users\jorkni\Documents\temp\snapz\IMG_{count.ToString("D3")}.jpg", jpg);
-                count++;
-                await Task.Delay(200);
-            }
+                File.WriteAllBytes($@"C:\Users\jorkni\Documents\temp\snapz\IMG_{count.ToString("D5")}.jpg", jpg);
+            count++;
+            });
+            
         }
 
         public BitmapSource CopyScreen(Window window)

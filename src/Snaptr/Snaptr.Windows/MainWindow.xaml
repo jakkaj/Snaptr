@@ -8,8 +8,10 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <StackPanel>
-            <Button Click="Button_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Cap"/>
-            <Button x:Name="Build" Click="Build_Click" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Build"/>
+            <Button Click="Button_Click"  VerticalAlignment="Top" HorizontalAlignment="Left" Content="Start"/>
+            <Button x:Name="Stop" Click="Stop_Click"  VerticalAlignment="Top" HorizontalAlignment="Left" Content="Stop"/>
+
+            
         </StackPanel>
         
     </Grid>
