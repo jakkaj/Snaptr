@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snaptr.Windows"
         mc:Ignorable="d"
-        Title="RecordArea" Height="300" Width="300">
+        Title="RecordArea" Height="300" Width="300"
+        Background="Blue" Opacity=".2"
+        ShowInTaskbar="False"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
+        >
     <Grid>
         
     </Grid>

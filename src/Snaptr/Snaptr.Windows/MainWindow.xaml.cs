@@ -35,12 +35,15 @@ namespace Snaptr.Windows
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             _recordArea = new RecordArea();
+            
             _recordArea.Show();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             _snapper = new Snapper(_recordArea);
+            _recordArea.Opacity = 0;
+            _recordArea.IsHitTestVisible = false;
             _snapper.DoSnapz();            
         }
 
@@ -51,9 +54,13 @@ namespace Snaptr.Windows
 
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
+
             _snapper.Stop();
             var vp = new VideoProd();
             vp.Produce();
+            _recordArea.Opacity = 1;
+            _recordArea.IsHitTestVisible = true;
+
         }
     }
 }

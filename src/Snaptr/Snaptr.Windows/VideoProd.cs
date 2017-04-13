@@ -10,7 +10,7 @@ namespace Snaptr.Windows
 {
     public class VideoProd
     {
-        public async Task<bool> Produce()
+        public async Task<bool> Produce(int scale = 720)
         {
             var rootFolder = @"C:\Users\jorkni\Documents\temp\snapz";
             
@@ -27,7 +27,7 @@ namespace Snaptr.Windows
                 rootFolder);
 
             _runFf(
-                "-i \"output.mp4\" -i palette.png -filter_complex \"fps=10,scale=1024:-1:flags=lanczos[x];[x][1:v]paletteuse\" output.gif",
+                $"-i \"output.mp4\" -i palette.png -filter_complex \"fps=10,scale={scale}:-1:flags=lanczos[x];[x][1:v]paletteuse\" output.gif",
                 rootFolder);
 
 
